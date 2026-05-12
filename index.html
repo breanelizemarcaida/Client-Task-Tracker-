@@ -1,1 +1,234 @@
+# index.html
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>James Sutherland Executive Dashboard</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="logo">
+      <h2>JS Executive</h2>
+      <p>Operations Dashboard</p>
+    </div>
+
+    <nav>
+      <button class="nav-item active" data-page="dashboard">Dashboard</button>
+      <button class="nav-item" data-page="projects">Projects</button>
+      <button class="nav-item" data-page="expenses">Expenses</button>
+      <button class="nav-item" data-page="travel">Travel</button>
+      <button class="nav-item" data-page="audit">Delegation Audit</button>
+      <button class="nav-item" data-page="meetings">Meetings</button>
+      <button class="nav-item" data-page="todos">To-Do</button>
+    </nav>
+
+    <div class="sidebar-actions">
+      <button id="themeToggle">Toggle Theme</button>
+      <button id="resetData">Reset Demo Data</button>
+    </div>
+  </aside>
+
+  <main class="content">
+
+    <header class="topbar">
+      <div>
+        <h1>James Sutherland</h1>
+        <p>Executive Operations System</p>
+      </div>
+
+      <div class="status-pill">
+        LIVE SYSTEM
+      </div>
+    </header>
+
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="page active-page">
+
+      <div class="cards-grid">
+
+        <div class="card">
+          <h3>Total Projects</h3>
+          <h1 id="dashboardProjects">0</h1>
+        </div>
+
+        <div class="card">
+          <h3>Total Expenses</h3>
+          <h1 id="dashboardExpenses">$0</h1>
+        </div>
+
+        <div class="card">
+          <h3>Upcoming Meetings</h3>
+          <h1 id="dashboardMeetings">0</h1>
+        </div>
+
+        <div class="card">
+          <h3>Pending Tasks</h3>
+          <h1 id="dashboardTasks">0</h1>
+        </div>
+
+      </div>
+
+      <div class="charts-grid">
+
+        <div class="chart-card">
+          <h3>Project Status Analytics</h3>
+          <canvas id="projectChart"></canvas>
+        </div>
+
+        <div class="chart-card">
+          <h3>Expense Analytics</h3>
+          <canvas id="expenseChart"></canvas>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="page">
+
+      <div class="section-header">
+        <h2>Project Tracker</h2>
+      </div>
+
+      <div class="form-grid">
+
+        <input id="projectName" placeholder="Project Name">
+        <input id="projectClient" placeholder="Client">
+        <select id="projectStatus">
+          <option>On Track</option>
+          <option>At Risk</option>
+          <option>Delayed</option>
+          <option>Complete</option>
+        </select>
+
+        <select id="projectPriority">
+          <option>High</option>
+          <option>Medium</option>
+          <option>Low</option>
+        </select>
+
+        <input type="date" id="projectStart">
+        <input type="date" id="projectTarget">
+        <input type="number" id="projectProgress" placeholder="Progress %">
+
+        <input id="projectOwner" placeholder="Team Owner">
+
+      </div>
+
+      <textarea id="projectNotes" placeholder="Notes"></textarea>
+
+      <button class="primary-btn" onclick="addProject()">Add Project</button>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Project</th>
+            <th>Status</th>
+            <th>Priority</th>
+            <th>Progress</th>
+            <th>Target</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody id="projectsTable"></tbody>
+      </table>
+
+    </section>
+
+    <!-- EXPENSES -->
+    <section id="expenses" class="page">
+
+      <div class="section-header">
+        <h2>Expense Budget Tracker</h2>
+      </div>
+
+      <div class="cards-grid">
+
+        <div class="card">
+          <h3>Budget</h3>
+          <h1>$10,000</h1>
+        </div>
+
+        <div class="card">
+          <h3>Total Spent</h3>
+          <h1 id="spentValue">$0</h1>
+        </div>
+
+        <div class="card">
+          <h3>Remaining</h3>
+          <h1 id="remainingValue">$0</h1>
+        </div>
+
+      </div>
+
+      <div class="form-grid">
+        <input type="date" id="expenseDate">
+        <input id="expenseDescription" placeholder="Description">
+
+        <select id="expenseCategory">
+          <option>Travel</option>
+          <option>Software</option>
+          <option>Marketing</option>
+          <option>Office</option>
+          <option>Payroll</option>
+          <option>Operations</option>
+          <option>Miscellaneous</option>
+        </select>
+
+        <input id="expenseVendor" placeholder="Vendor">
+        <input type="number" id="expenseAmount" placeholder="Amount">
+
+        <select id="expensePayment">
+          <option>Credit Card</option>
+          <option>Bank Transfer</option>
+          <option>Cash</option>
+        </select>
+
+      </div>
+
+      <textarea id="expenseNotes" placeholder="Notes"></textarea>
+
+      <button class="primary-btn" onclick="addExpense()">Add Expense</button>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Amount</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody id="expenseTable"></tbody>
+      </table>
+
+    </section>
+
+  </main>
+
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>
+```
 
