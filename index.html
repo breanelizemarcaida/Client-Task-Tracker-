@@ -1,232 +1,899 @@
-# index.html
-
-```html
+```html id="r1d4sh"
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>James Sutherland Executive Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>James Sutherland Executive Dashboard</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <link rel="stylesheet" href="style.css">
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, sans-serif;
+}
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+body{
+display:flex;
+background:#f4f7fb;
+color:#222;
+min-height:100vh;
+}
+
+.sidebar{
+width:260px;
+background:#0a2b5e;
+color:#fff;
+padding:20px;
+position:fixed;
+height:100%;
+overflow-y:auto;
+}
+
+.sidebar h2{
+margin-bottom:20px;
+}
+
+.sidebar button{
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border:none;
+background:#fff;
+color:#0a2b5e;
+font-weight:bold;
+border-radius:8px;
+cursor:pointer;
+transition:0.2s;
+}
+
+.sidebar button:hover{
+background:#dce7f8;
+}
+
+.main{
+margin-left:260px;
+padding:20px;
+width:100%;
+}
+
+.module{
+display:none;
+}
+
+.module.active{
+display:block;
+}
+
+.card-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+margin-bottom:20px;
+}
+
+.card{
+background:#fff;
+padding:20px;
+border-radius:10px;
+box-shadow:0 2px 10px rgba(0,0,0,0.08);
+border-left:5px solid #0a2b5e;
+}
+
+.section{
+background:#fff;
+padding:20px;
+border-radius:10px;
+box-shadow:0 2px 10px rgba(0,0,0,0.08);
+margin-bottom:20px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+}
+
+th,td{
+padding:12px;
+border-bottom:1px solid #ddd;
+text-align:left;
+}
+
+th{
+background:#0a2b5e;
+color:#fff;
+}
+
+input, select, textarea{
+width:100%;
+padding:10px;
+margin-top:5px;
+border:1px solid #ccc;
+border-radius:6px;
+}
+
+.form-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:15px;
+margin-bottom:15px;
+}
+
+.btn{
+padding:10px 14px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+font-weight:bold;
+}
+
+.btn-primary{
+background:#0a2b5e;
+color:white;
+}
+
+.btn-danger{
+background:#d32f2f;
+color:white;
+}
+
+.progress{
+background:#ddd;
+border-radius:20px;
+overflow:hidden;
+height:12px;
+}
+
+.progress-bar{
+background:#0a2b5e;
+height:100%;
+}
+
+@media(max-width:768px){
+
+body{
+flex-direction:column;
+}
+
+.sidebar{
+position:relative;
+width:100%;
+height:auto;
+}
+
+.main{
+margin-left:0;
+}
+
+}
+</style>
 </head>
 
 <body>
 
-<div class="app">
+<div class="sidebar">
 
-  <aside class="sidebar">
-    <div class="logo">
-      <h2>JS Executive</h2>
-      <p>Operations Dashboard</p>
-    </div>
+<h2>Executive Dashboard</h2>
 
-    <nav>
-      <button class="nav-item active" data-page="dashboard">Dashboard</button>
-      <button class="nav-item" data-page="projects">Projects</button>
-      <button class="nav-item" data-page="expenses">Expenses</button>
-      <button class="nav-item" data-page="travel">Travel</button>
-      <button class="nav-item" data-page="audit">Delegation Audit</button>
-      <button class="nav-item" data-page="meetings">Meetings</button>
-      <button class="nav-item" data-page="todos">To-Do</button>
-    </nav>
+<button onclick="showModule('projects')">Project Tracker</button>
+<button onclick="showModule('expenses')">Expense Tracker</button>
+<button onclick="showModule('travel')">Travel Planner</button>
+<button onclick="showModule('audit')">Delegation Audit</button>
+<button onclick="showModule('meetings')">Meeting Agenda</button>
+<button onclick="showModule('todos')">To-Do List</button>
 
-    <div class="sidebar-actions">
-      <button id="themeToggle">Toggle Theme</button>
-      <button id="resetData">Reset Demo Data</button>
-    </div>
-  </aside>
-
-  <main class="content">
-
-    <header class="topbar">
-      <div>
-        <h1>James Sutherland</h1>
-        <p>Executive Operations System</p>
-      </div>
-
-      <div class="status-pill">
-        LIVE SYSTEM
-      </div>
-    </header>
-
-    <!-- DASHBOARD -->
-    <section id="dashboard" class="page active-page">
-
-      <div class="cards-grid">
-
-        <div class="card">
-          <h3>Total Projects</h3>
-          <h1 id="dashboardProjects">0</h1>
-        </div>
-
-        <div class="card">
-          <h3>Total Expenses</h3>
-          <h1 id="dashboardExpenses">$0</h1>
-        </div>
-
-        <div class="card">
-          <h3>Upcoming Meetings</h3>
-          <h1 id="dashboardMeetings">0</h1>
-        </div>
-
-        <div class="card">
-          <h3>Pending Tasks</h3>
-          <h1 id="dashboardTasks">0</h1>
-        </div>
-
-      </div>
-
-      <div class="charts-grid">
-
-        <div class="chart-card">
-          <h3>Project Status Analytics</h3>
-          <canvas id="projectChart"></canvas>
-        </div>
-
-        <div class="chart-card">
-          <h3>Expense Analytics</h3>
-          <canvas id="expenseChart"></canvas>
-        </div>
-
-      </div>
-
-    </section>
-
-    <!-- PROJECTS -->
-    <section id="projects" class="page">
-
-      <div class="section-header">
-        <h2>Project Tracker</h2>
-      </div>
-
-      <div class="form-grid">
-
-        <input id="projectName" placeholder="Project Name">
-        <input id="projectClient" placeholder="Client">
-        <select id="projectStatus">
-          <option>On Track</option>
-          <option>At Risk</option>
-          <option>Delayed</option>
-          <option>Complete</option>
-        </select>
-
-        <select id="projectPriority">
-          <option>High</option>
-          <option>Medium</option>
-          <option>Low</option>
-        </select>
-
-        <input type="date" id="projectStart">
-        <input type="date" id="projectTarget">
-        <input type="number" id="projectProgress" placeholder="Progress %">
-
-        <input id="projectOwner" placeholder="Team Owner">
-
-      </div>
-
-      <textarea id="projectNotes" placeholder="Notes"></textarea>
-
-      <button class="primary-btn" onclick="addProject()">Add Project</button>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Project</th>
-            <th>Status</th>
-            <th>Priority</th>
-            <th>Progress</th>
-            <th>Target</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-
-        <tbody id="projectsTable"></tbody>
-      </table>
-
-    </section>
-
-    <!-- EXPENSES -->
-    <section id="expenses" class="page">
-
-      <div class="section-header">
-        <h2>Expense Budget Tracker</h2>
-      </div>
-
-      <div class="cards-grid">
-
-        <div class="card">
-          <h3>Budget</h3>
-          <h1>$10,000</h1>
-        </div>
-
-        <div class="card">
-          <h3>Total Spent</h3>
-          <h1 id="spentValue">$0</h1>
-        </div>
-
-        <div class="card">
-          <h3>Remaining</h3>
-          <h1 id="remainingValue">$0</h1>
-        </div>
-
-      </div>
-
-      <div class="form-grid">
-        <input type="date" id="expenseDate">
-        <input id="expenseDescription" placeholder="Description">
-
-        <select id="expenseCategory">
-          <option>Travel</option>
-          <option>Software</option>
-          <option>Marketing</option>
-          <option>Office</option>
-          <option>Payroll</option>
-          <option>Operations</option>
-          <option>Miscellaneous</option>
-        </select>
-
-        <input id="expenseVendor" placeholder="Vendor">
-        <input type="number" id="expenseAmount" placeholder="Amount">
-
-        <select id="expensePayment">
-          <option>Credit Card</option>
-          <option>Bank Transfer</option>
-          <option>Cash</option>
-        </select>
-
-      </div>
-
-      <textarea id="expenseNotes" placeholder="Notes"></textarea>
-
-      <button class="primary-btn" onclick="addExpense()">Add Expense</button>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Description</th>
-            <th>Category</th>
-            <th>Amount</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-
-        <tbody id="expenseTable"></tbody>
-      </table>
-
-    </section>
-
-  </main>
+<button onclick="resetDemoData()">Reset Demo Data</button>
 
 </div>
 
-<script src="app.js"></script>
+<div class="main">
+
+<!-- PROJECTS -->
+
+<section id="projects" class="module active">
+
+<h1>Project Tracker</h1>
+
+<div class="card-grid">
+<div class="card">
+<h3>Total Projects</h3>
+<p id="projectCount">0</p>
+</div>
+
+<div class="card">
+<h3>Completed</h3>
+<p id="projectComplete">0</p>
+</div>
+</div>
+
+<div class="section">
+
+<div class="form-grid">
+<input id="projectName" placeholder="Project Name">
+<select id="projectStatus">
+<option>On Track</option>
+<option>At Risk</option>
+<option>Delayed</option>
+<option>Complete</option>
+</select>
+
+<input type="date" id="projectDate">
+<input type="number" id="projectProgress" placeholder="Progress %">
+</div>
+
+<button class=" btn-primary" onclick="addProject()">Add Project</button>
+
+<table>
+<thead>
+<tr>
+<th>Project</th>
+<th>Status</th>
+<th>Date</th>
+<thProgress</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody id="projectTable"></tbody>
+</table>
+
+</section>
+
+<!-- EXPENSES -->
+
+<section id="expenses" class="module">
+
+<h1>Expense Budget Tracker</h1>
+
+<div class="card-grid">
+<div class="card">
+<h3>Total Spent</h3>
+<p id="totalSpent">$0</p>
+</div>
+
+<div class="card">
+<h3>Remaining Budget</h3>
+<p id="remainingBudget">$0</p>
+</div>
+</div>
+
+<div class="section">
+
+<div class="form-grid">
+<input type="date" id="expenseDate">
+<input id="expenseDesc" placeholder="Description">
+<input type="number" id="expenseAmount" placeholder="Amount">
+
+<select id="expenseCategory">
+<option>Travel</option>
+<option>Software</option>
+<option>Office</option>
+<option>Marketing</option>
+</select>
+</div>
+
+<button class=" btn-primary" onclick="addExpense()">Add Expense</button>
+
+<canvas id="expenseChart"></canvas>
+
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Description</th>
+<th>Amount</th>
+<thCategory</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody id="expenseTable"></tbody>
+</table>
+
+</section>
+
+<!-- TRAVEL -->
+
+<section id="travel" class="module">
+
+<h1>Travel Planner</h1>
+
+<div class="section">
+
+<div class="form-grid">
+<input id="tripDestination" placeholder="Destination">
+<input id="tripDates" placeholder="Dates">
+<input id="tripPurpose" placeholder="Purpose">
+
+<select id="tripStatus">
+<option>Planned</option>
+<option>Confirmed</option>
+<option>Completed</option>
+</select>
+</div>
+
+<input id="tripChecklist" placeholder="Checklist comma separated">
+
+<br><br>
+
+<button class="btn btn-primary" onclick="addTrip()">Add Trip</button>
+
+<table>
+<thead>
+<tr>
+<th>Destination</th>
+<th>Dates</th>
+<th>Status</th>
+<th>Checklist</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody id="tripTable"></tbody>
+</table>
+
+</section>
+
+<!-- AUDIT -->
+
+<section id="audit" class="module">
+
+<h1>Delegation Audit</h1>
+
+<div class="section">
+
+<div class="form-grid">
+<input id="auditTask" placeholder="Task">
+
+<select id="auditPerson">
+<option>James Sutherland</option>
+<option>Olivia Chen</option>
+<option>VA</option>
+</select>
+
+<input type="date" id="auditDate">
+
+<select id="auditStatus">
+<option>Not Started</option>
+<option>In Progress</option>
+<option>Completed</option>
+</select>
+</div>
+
+<button class="btn btn-primary" onclick="addAudit()">Add Task</button>
+
+<canvas id="auditChart"></canvas>
+
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Delegated To</th>
+<th>Status</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody id="auditTable"></tbody>
+</table>
+
+</section>
+
+<!-- MEETINGS -->
+
+<section id="meetings" class="module">
+
+<h1>Meeting Agenda</h1>
+
+<div class="section">
+
+<div class="form-grid">
+<input id="meetingTitle" placeholder="Meeting Title">
+<input type="date" id="meetingDate">
+<input type="time" id="meetingTime">
+<input id="meetingDuration" placeholder="Duration">
+</div>
+
+<textarea id="meetingItems" placeholder="Agenda items"></textarea>
+
+<br>
+
+<button class=" btn-primary" onclick="addMeeting()">Add Meeting</button>
+
+<table>
+<thead>
+<tr>
+<th>Meeting</th>
+<th>Date</th>
+<thTime</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody id="meetingTable"></tbody>
+</table>
+
+</section>
+
+<!-- TODOS -->
+
+<section id="todos" class="module">
+
+<h1>Client To-Do List</h1>
+
+<div class="section">
+
+<div class="form-grid">
+<input id="todoTask" placeholder="Task Name">
+<input id="todoAssignee" placeholder="Assignee">
+<input type="date" id="todoDeadline">
+
+<select id="todoPriority">
+<option>High</option>
+<option>Medium</option>
+<option>Low</option>
+</select>
+
+<select id="todoStatus">
+<option>Pending</option>
+<option>In Progress</option>
+<option>Done</option>
+</select>
+</div>
+
+<button class="btn btn-primary" onclick="addTodo()">Add Task</button>
+
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Assignee</th>
+<th>Priority</th>
+<th>Status</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody id="todoTable"></tbody>
+</table>
+
+</section>
+
+</div>
+
+<script>
+
+const budget = 10000;
+
+let expenseChart;
+let auditChart;
+
+function save(key,data){
+localStorage.setItem(key,JSON.stringify(data));
+}
+
+function load(key){
+return JSON.parse(localStorage.getItem(key))||[];
+}
+
+function showModule(id){
+document.querySelectorAll('.module').forEach(m=>m.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+}
+
+function addProject(){
+
+const projects = load('projects');
+
+projects.push({
+id:Date.now(),
+name:projectName.value,
+status:projectStatus.value,
+date:projectDate.value,
+progress:projectProgress.value
+});
+
+save('projects',projects);
+renderProjects();
+}
+
+function renderProjects(){
+
+const projects = load('projects');
+
+projectTable.innerHTML='';
+
+let complete = 0;
+
+projects.forEach(p=>{
+
+if(p.status==='Complete') complete++;
+
+projectTable.innerHTML += `
+<tr>
+<td>${p.name}</td>
+<td>${p.status}</td>
+<td>${p.date}</td>
+<td>
+<div class="progress">
+<div class="progress-bar" style="width:${p.progress}%"></div>
+</div>
+${p.progress}%
+</td>
+<td>
+<button class="btn btn-danger" onclick="deleteProject(${p.id})">Delete</button>
+</td>
+</tr>
+`;
+});
+
+projectCount.textContent = projects.length;
+projectComplete.textContent = complete;
+}
+
+function deleteProject(id){
+let projects = load('projects');
+projects = projects.filter(p=>p.id!==id);
+save('projects',projects);
+renderProjects();
+}
+
+function addExpense(){
+
+const expenses = load('expenses');
+
+expenses.push({
+id:Date.now(),
+date:expenseDate.value,
+desc:expenseDesc.value,
+amount:Number(expenseAmount.value),
+category:expenseCategory.value
+});
+
+save('expenses',expenses);
+renderExpenses();
+}
+
+function renderExpenses(){
+
+const expenses = load('expenses');
+
+expenseTable.innerHTML='';
+
+let total=0;
+
+const cats={
+Travel:0,
+Software:0,
+Office:0,
+Marketing:0
+};
+
+expenses.forEach(e=>{
+
+total += e.amount;
+cats[e.category]+=e.amount;
+
+expenseTable.innerHTML += `
+<tr>
+<td>${e.date}</td>
+<td>${e.desc}</td>
+<td>$${e.amount}</td>
+<td>${e.category}</td>
+<td>
+<button class="btn btn-danger" onclick="deleteExpense(${e.id})">Delete</button>
+</td>
+</tr>
+`;
+});
+
+totalSpent.textContent='$'+total;
+remainingBudget.textContent='$'+(budget-total);
+
+if(expenseChart) expenseChart.destroy();
+
+expenseChart = new Chart(document.getElementById('expenseChart'),{
+type:'bar',
+data:{
+labels:Object.keys(cats),
+datasets:[{
+label:'Expenses',
+data:Object.values(cats),
+backgroundColor:'#0a2b5e'
+}]
+}
+});
+}
+
+function deleteExpense(id){
+let expenses = load('expenses');
+expenses = expenses.filter(e=>e.id!==id);
+save('expenses',expenses);
+renderExpenses();
+}
+
+function addTrip(){
+
+const trips = load('trips');
+
+trips.push({
+id:Date.now(),
+destination:tripDestination.value,
+dates:tripDates.value,
+purpose:tripPurpose.value,
+status:tripStatus.value,
+checklist:tripChecklist.value.split(',')
+});
+
+save('trips',trips);
+renderTrips();
+}
+
+function renderTrips(){
+
+const trips = load('trips');
+
+tripTable.innerHTML='';
+
+trips.forEach(t=>{
+
+tripTable.innerHTML += `
+<tr>
+<td>${t.destination}</td>
+<td>${t.dates}</td>
+<td>${t.status}</td>
+<td>${t.checklist.join(', ')}</td>
+<td>
+<button class="btn btn-danger" onclick="deleteTrip(${t.id})">Delete</button>
+</td>
+</tr>
+`;
+});
+}
+
+function deleteTrip(id){
+let trips = load('trips');
+trips = trips.filter(t=>t.id!==id);
+save('trips',trips);
+renderTrips();
+}
+
+function addAudit(){
+
+const audits = load('audits');
+
+audits.push({
+id:Date.now(),
+task:auditTask.value,
+person:auditPerson.value,
+status:auditStatus.value
+});
+
+save('audits',audits);
+renderAudits();
+}
+
+function renderAudits(){
+
+const audits = load('audits');
+
+auditTable.innerHTML='';
+
+const breakdown = {
+"James Sutherland":0,
+"Olivia Chen":0,
+"VA":0
+};
+
+audits.forEach(a=>{
+
+breakdown[a.person]++;
+
+auditTable.innerHTML += `
+<tr>
+<td>${a.task}</td>
+<td>${a.person}</td>
+<td>${a.status}</td>
+<td>
+<button class="btn btn-danger" onclick="deleteAudit(${a.id})">Delete</button>
+</td>
+</tr>
+`;
+});
+
+if(auditChart) auditChart.destroy();
+
+auditChart = new Chart(document.getElementById('auditChart'),{
+type:'pie',
+data:{
+labels:Object.keys(breakdown),
+datasets:[{
+data:Object.values(breakdown),
+backgroundColor:['#0a2b5e','#3f7ad6','#8bb5ff']
+}]
+}
+});
+}
+
+function deleteAudit(id){
+let audits = load('audits');
+audits = audits.filter(a=>a.id!==id);
+save('audits',audits);
+renderAudits();
+}
+
+function addMeeting(){
+
+const meetings = load('meetings');
+
+meetings.push({
+id:Date.now(),
+title:meetingTitle.value,
+date:meetingDate.value,
+time:meetingTime.value
+});
+
+save('meetings',meetings);
+renderMeetings();
+}
+
+function renderMeetings(){
+
+const meetings = load('meetings');
+
+meetingTable.innerHTML='';
+
+meetings.forEach(m=>{
+
+meetingTable.innerHTML += `
+<tr>
+<td>${m.title}</td>
+<td>${m.date}</td>
+<td>${m.time}</td>
+<td>
+<button class="btn btn-danger" onclick="deleteMeeting(${m.id})">Delete</button>
+</td>
+</tr>
+`;
+});
+}
+
+function deleteMeeting(id){
+let meetings = load('meetings');
+meetings = meetings.filter(m=>m.id!==id);
+save('meetings',meetings);
+renderMeetings();
+}
+
+function addTodo(){
+
+const todos = load('todos');
+
+todos.push({
+id:Date.now(),
+task:todoTask.value,
+assignee:todoAssignee.value,
+priority:todoPriority.value,
+status:todoStatus.value
+});
+
+save('todos',todos);
+renderTodos();
+}
+
+function renderTodos(){
+
+const todos = load('todos');
+
+todoTable.innerHTML='';
+
+todos.forEach(t=>{
+
+todoTable.innerHTML += `
+<tr>
+<td>${t.task}</td>
+<td>${t.assignee}</td>
+<td>${t.priority}</td>
+<td>${t.status}</td>
+<td>
+<button class="btn btn-danger" onclick="deleteTodo(${t.id})">Delete</button>
+</td>
+</tr>
+`;
+});
+}
+
+function deleteTodo(id){
+let todos = load('todos');
+todos = todos.filter(t=>t.id!==id);
+save('todos',todos);
+renderTodos();
+}
+
+function resetDemoData(){
+
+save('projects',[
+{
+id:1,
+name:'Website Redesign',
+status:'On Track',
+date:'2026-06-10',
+progress:75
+}
+]);
+
+save('expenses',[
+{
+id:1,
+date:'2026-05-01',
+desc:'Adobe Subscription',
+amount:500,
+category:'Software'
+}
+]);
+
+save('trips',[
+{
+id:1,
+destination:'Singapore',
+dates:'June 10-15',
+purpose:'Business',
+status:'Confirmed',
+checklist:['Visa','Flight','Hotel']
+}
+]);
+
+save('audits',[
+{
+id:1,
+task:'Monthly Report',
+person:'Olivia Chen',
+status:'In Progress'
+}
+]);
+
+save('meetings',[
+{
+id:1,
+title:'Quarterly Review',
+date:'2026-06-01',
+time:'10:00'
+}
+]);
+
+save('todos',[
+{
+id:1,
+task:'Approve Budget',
+assignee:'James',
+priority:'High',
+status:'Pending'
+}
+]);
+
+renderAll();
+}
+
+function renderAll(){
+renderProjects();
+renderExpenses();
+renderTrips();
+renderAudits();
+renderMeetings();
+renderTodos();
+}
+
+if(!localStorage.getItem('projects')){
+resetDemoData();
+}else{
+renderAll();
+}
+
+</script>
 
 </body>
 </html>
